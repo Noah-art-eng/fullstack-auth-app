@@ -1,10 +1,18 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const users = []; // 模拟数据库存储用户信息
+require('dotenv').config()
+const mongoose = require('mongoose')
+const User = require('./models/User')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const auth = require('./middleware/auth')
 
 app.use(cors());
 app.use(express.json());
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('MongoDB connected ✅'))
+    .catch(err => console.error('MongoDB error ❌', err))
 
 // 测试接口
 app.get('/', (req, res) => {
@@ -12,27 +20,56 @@ app.get('/', (req, res) => {
 });
 
 // 登录接口（后面扩展）
-app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    const user = users.find(user => user.username === username && user.password === password);
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body
 
-    if (user) {
-        // 这里简单返回一个固定的 token，实际项目中应该使用 JWT 或其他方式生成
-        res.json({ success: true, token: 'fake-jwt-token' });
+    const user = await User.findOne({ username })
+
+    if (!user) {
+        return res.json({ success: false, message: '用户不存在 ❌' })
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if (isMatch) {
+        const token = jwt.sign(
+            { userId: user._id },
+            'secret-key',
+            { expiresIn: '1d' }
+        )
+
+        res.json({ success: true, token })
     } else {
-        res.json({ success: false, message: 'Invalid username or password' });
+        res.json({ success: false, message: '密码错误 ❌' })
     }
 });
 
-app.post('/register', (req, res) => {
-    const { username, password } = req.body;
-    const existingUser = users.find(user => user.username === username);
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body
 
-    if (existingUser) {
-        return res.json({ success: false, message: 'Username already exists' });
+    try {
+        const existingUser = await User.findOne({ username })
+
+        if (existingUser) {
+            return res.json({ success: false, message: '用户已存在 ❌' })
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const user = new User({ username, password: hashedPassword })
+        await user.save()
+
+        res.json({ success: true, message: '注册成功 ✅' })
+    } catch (err) {
+        res.json({ success: false, message: '注册失败 ❌' })
     }
-    users.push({ username, password });
-    res.json({ success: true, message: 'Registration successful' });
+});
+
+app.get('/profile', auth, async (req, res) => {
+
+    const user = await User.findById(req.user.userId)
+
+    res.json({ username: user.username })
+
 });
 
 app.listen(3000, () => {

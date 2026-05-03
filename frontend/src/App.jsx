@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import axios from 'axios'
-const token = localStorage.getItem('token')
+
 function App() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [msg, setMsg] = useState('')
-
+  const [token, setToken] = useState(localStorage.getItem('token'))
   const handleLogin = async () => {
     try {
       const res = await axios.post('http://localhost:3000/login', {
@@ -13,8 +13,9 @@ function App() {
         password
       })
       if (res.data.success) {
-        setMsg('登录成功 ✅')
         localStorage.setItem('token', res.data.token)
+        setToken(res.data.token)
+        setMsg('登录成功 ✅')
       } else {
         setMsg('登录失败 ❌')
       }
@@ -34,6 +35,22 @@ function App() {
     } catch (err) {
       setMsg('注册请求错误 ❌');
     }
+  }
+
+  const getProfile = async () => {
+    try {
+      const token = localStorage.getItem('token')
+
+      const res = await axios.get('http://localhost:3000/profile', {
+        headers: {
+          Authorization: token
+        }
+      })
+
+      setMsg('用户名: ' + res.data.username)
+    } catch (err) {
+      setMsg('获取用户信息失败 ❌')
+    }
   };
 
   return (
@@ -41,12 +58,15 @@ function App() {
       {token ? (
         <>
           <h2>已登录 ✅</h2>
+          <button onClick={getProfile}>Get Profile</button>
           <button onClick={() => {
             localStorage.removeItem('token')
-            window.location.reload()
+            setToken(null)
+            setMsg('')
           }}>
             Logout
           </button>
+          <p>{msg}</p>
         </>
       ) : (
         <>
