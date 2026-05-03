@@ -67,24 +67,6 @@ GET /profile
 
 ---
 
-Project Structure
-
-fullstack-auth-app
-
-├── backend
-│   ├── index.js
-│   ├── models
-│   └── middleware
-├── frontend
-│   ├── src
-│   │   ├── api
-│   │   ├── pages
-│   │   └── components
-│   └── public
-└── README.md
-
----
-
 How to Run
 
 Backend
