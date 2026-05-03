@@ -5,9 +5,7 @@
 
 A fullstack authentication system built with React, Node.js, Express, MongoDB Atlas, JWT, and Tailwind CSS.
 ---
-
- 📸 Preview
-
+Preview
 ![Login](./frontend/public/1.png)  
 ![Dashboard](./frontend/public/2.png)
 
@@ -71,18 +69,19 @@ GET /profile
 
 Project Structure
 
-fullstack-auth-app  
-├── backend  
-│   ├── index.js  
-│   ├── models  
-│   └── middleware  
-├── frontend  
-│   ├── src  
-│   │   ├── api  
-│   │   ├── pages  
-│   │   └── components  
-│   └── public  
-└── README.md  
+fullstack-auth-app
+
+├── backend
+│   ├── index.js
+│   ├── models
+│   └── middleware
+├── frontend
+│   ├── src
+│   │   ├── api
+│   │   ├── pages
+│   │   └── components
+│   └── public
+└── README.md
 
 ---
 
