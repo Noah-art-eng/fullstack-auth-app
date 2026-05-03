@@ -4,6 +4,7 @@ import axios from 'axios'
 function App() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
   const [msg, setMsg] = useState('')
   const [token, setToken] = useState(localStorage.getItem('token'))
   const handleLogin = async () => {
@@ -47,7 +48,7 @@ function App() {
         }
       })
 
-      setMsg('用户名: ' + res.data.username)
+      setUser(res.data)
     } catch (err) {
       setMsg('获取用户信息失败 ❌')
     }
@@ -66,7 +67,14 @@ function App() {
           }}>
             Logout
           </button>
-          <p>{msg}</p>
+          {user && (
+            <div>
+              <p>用户名: {user.username}</p>
+              <p>ID: {user.id}</p>
+              <p>注册时间: {new Date(user.createdAt).toLocaleString()}</p>
+              <p>更新时间: {new Date(user.updatedAt).toLocaleString()}</p>
+            </div>
+          )}
         </>
       ) : (
         <>

@@ -65,12 +65,19 @@ app.post('/register', async (req, res) => {
 });
 
 app.get('/profile', auth, async (req, res) => {
-
     const user = await User.findById(req.user.userId)
 
-    res.json({ username: user.username })
+    if (!user) {
+        return res.status(404).json({ message: '用户不存在 ❌' })
+    }
 
-});
+    res.json({
+        username: user.username,
+        id: user._id,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+    })
+})
 
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
