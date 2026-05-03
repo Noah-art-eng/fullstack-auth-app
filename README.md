@@ -6,6 +6,7 @@
 A fullstack authentication system built with React, Node.js, Express, MongoDB Atlas, JWT, and Tailwind CSS.
 ---
 Preview
+
 ![Login](./frontend/public/1.png)  
 ![Dashboard](./frontend/public/2.png)
 
