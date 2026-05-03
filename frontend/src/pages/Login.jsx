@@ -41,29 +41,40 @@ function Login() {
     }
 
     return (
-        <div style={{ padding: 50 }}>
-            <h2>Login</h2>
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="bg-white p-8 rounded-lg shadow-md w-80">
+                <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
 
-            <input
-                placeholder="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
+                <input
+                    className="w-full border p-2 mb-3 rounded"
+                    placeholder="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
 
-            <br /><br />
+                <input
+                    className="w-full border p-2 mb-3 rounded"
+                    placeholder="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
 
-            <input
-                placeholder="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
+                <button
+                    className="w-full bg-blue-500 text-white p-2 rounded mb-2 hover:bg-blue-600"
+                    onClick={handleLogin}
+                >
+                    Login
+                </button>
 
-            <br /><br />
+                <button
+                    className="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
+                    onClick={handleRegister}
+                >
+                    Register
+                </button>
 
-            <button onClick={handleLogin}>Login</button>
-            <button onClick={handleRegister}>Register</button>
-
-            <p>{message}</p>
+                <p className="text-red-500 mt-2 text-center">{message}</p>
+            </div>
         </div>
     )
 }
